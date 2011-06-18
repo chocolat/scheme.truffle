@@ -1,0 +1,42 @@
+(trigger
+    (key [[ctrl][shift]E]))
+
+(name [Evaluate Selection])
+
+(only-in source.scheme)
+
+(input selection line)
+
+(output tooltip)
+
+(save nothing)
+
+(script [# Evaluate the current seletion in our Scheme interpreter
+#
+# The interpreter you use should be set in the environment
+# variable TM_SCHEME_INTERPRETER
+
+INTERPRET=${TM_SCHEME_INTERPRETER:=csi}
+CMD=$(basename "$INTERPRET")
+
+# Run depending on the system are we on?
+if [ $CMD == "mzscheme" ] ; then
+
+	# Check mzscheme version for decimal;
+	# command-line behavior changed between
+	# v372 and v4.0
+
+	VER=$("$INTERPRET" -v | sed -E 's/^Welcome to MzScheme v([^ ]+).*$/\1/')
+
+	# version 4.0 or later
+	if (echo $VER | grep -q '\.') ; then
+		"$INTERPRET" -e "$TM_SELECTED_TEXT"
+	# version 372 or earlier
+	else
+		"$INTERPRET" -vm -e "$TM_SELECTED_TEXT"
+	fi
+elif [ $CMD == "csi" ] ; then
+	"$INTERPRET" -q < /dev/stdin
+elif [ $CMD == "gosh" ] ; then
+	"$INTERPRET" -q < /dev/stdin
+fi])

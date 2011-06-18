@@ -1,0 +1,21 @@
+(trigger
+    (key [[ctrl][shift]I]))
+
+(name [Start Interpreter])
+
+(only-in source.scheme)
+
+(input nothing)
+
+(output nothing)
+
+(save nothing)
+
+(script [# The interpreter you use should be set in the environment
+# variable TM_SCHEME_INTERPRETER
+
+osascript -e "tell application \"Terminal\"
+   do script \"clear; ${TM_SCHEME_INTERPRETER:=csi}\"
+   activate
+end tell"
+])

@@ -1,0 +1,45 @@
+(detector
+    (extension scm)
+    (extension sch))
+
+(folding
+    (start [(?x)^ [ \t]* \(
+	  (?<par>
+	    ( [^()\n]++ | \( \g<par> \)? )*+
+	  )
+	$])
+    (stop ^\s*$))
+
+(pair `[`
+    `]`
+    (smart-typing))
+
+(pair [(]
+    [)]
+    (smart-typing))
+
+(pair "
+    "
+    (smart-typing))
+
+(pair [{]
+    [}]
+    (smart-typing))
+
+(indentation.decrease [(?x)^ [ \t]*+
+	  (?<par>
+	    ( [^()\n]++ | \( \g<par> \) )*+
+	  )
+	  ( \) [ \t]*+ ) ++
+	$])
+
+(indentation.increase [(?x)^ [ \t]*+ \(
+	  (?<par>
+	    ( [^()\n]++ | \( \g<par> \)? )*+
+	  )
+	$])
+
+(shell-variables
+    (TM_COMMENT_START ;))
+
+(comment.line ;)
